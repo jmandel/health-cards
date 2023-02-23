@@ -5,6 +5,8 @@ import fs from 'fs';
 import got from 'got';
 import jose, { JWK } from 'node-jose';
 import pako from 'pako';
+import cbor from 'cbor';
+// import b45 from './node_modules/base45-js/lib/base45-js.js';
 import QrCode, { QRCodeSegment } from 'qrcode';
 // this jwk set contains three keys:
 //   0: an ECDSA key used to sign bundles 00, 02, and 03
@@ -17,7 +19,7 @@ const ISSUER_URL = process.env.ISSUER_URL || 'https://spec.smarthealth.cards/exa
 
 import CovidVaccinesFixture from './fixtures/covid-vaccines-bundle.json';
 import DrFixture from './fixtures/dr-bundle.json';
-import CarinFixture from './fixtures/carin-insurance-bundle.json';
+// import CarinFixture from './fixtures/carin-insurance-bundle.json';
 import CarinFixtureMinimal from './fixtures/carin-minimal.json';
 import RevokedFixture from './fixtures/revoked-bundle.json'; // example of a card that will be revoked
 
@@ -35,14 +37,6 @@ interface BundleInfo {
 const issuerSupportingRevocation = new Set([0]);
 
 const exampleBundleInfo: BundleInfo[] = [
-  {
-    fixture: CarinFixture,
-    issuerIndex: 0,
-    types: [],
-    title: 'CARIN Digital Insurance Card',
-    description:
-      'Large payload representing a CARIN Digital Insurance Card; not suitable for direct presentation in QRs',
-  },
   {
     fixture: CarinFixtureMinimal,
     issuerIndex: 0,
@@ -98,7 +92,7 @@ export class Signer {
     const bodyString = JSON.stringify(idTokenPayload);
 
     const fields = deflate ? { zip: 'DEF' } : {};
-    const body = deflate ? pako.deflateRaw(bodyString) : bodyString;
+    const body = deflate ? pako.deflateRaw(bodyString, ) : bodyString;
 
     const signed = await jose.JWS.createSign({ format: 'compact', fields }, this.signingKey)
       .update(Buffer.from(body))
@@ -191,9 +185,8 @@ function createHealthCardJwsPayload(
         fhirBundle,
       },
       shl: {
-        url: 'https://ehr.example.org/qr/Y9xwkUdtmN9wwoJoN3ffJIhX2UGvCL1JnlPVNL3kDWM/m',
-        flag: 'LP',
-        key: 'rxTgYlOaKJPFtcEd0qcceN8wEU4p94SqAwIWQe6uX7Q',
+        url: "https://api.vaxx.link/api/shl/i08siDGnC9SxfikeSTkFOEZjgYyi-zPpZjjuyhajWBA",
+        key: "bgDmCXM4vyhzHL-iQ3jw0Q-4dk3jVWS5s7wHdaJ6UYk",
       },
     },
   };
@@ -269,6 +262,11 @@ async function processExampleBundle(
   const exampleBundleHealthCardFile = await createHealthCardFile(exampleJwsPayload, exampleBundleInfo.issuerIndex);
 
   const jws = exampleBundleHealthCardFile.verifiableCredential[0] as string;
+  const parts = jws.split(".").map(p => jose.util.base64url.decode(p));
+  const asCbor = cbor.encode(parts);
+  console.log(asCbor, asCbor.length, Math.ceil(asCbor.length * 3.0/2.0))
+  const bex = 3.0 / 2.0 * pako.deflateRaw(jws).length;
+  console.log("jws", jws.length, "comp", pako.deflateRaw(jws).length, "bex", bex);
   const jwsChunks = splitJwsIntoChunks(jws);
   const qrSet = jwsChunks.map((c, i, chunks) => toNumericQr(c, i, chunks.length));
   const exampleBundleHealthCardNumericQr = qrSet.map((qr) => qr.map(({ data }) => data).join(''));
