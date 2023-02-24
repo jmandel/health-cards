@@ -6,8 +6,7 @@
       "resource": {
         "resourceType": "Patient",
         "name": [{
-          "given": ["Joshua", "C"],
-          "family": "Mandel"
+          "text": "Joshua C Mandel"
         }],
         "birthDate": "1982-10-26",
         "identifier": [{
@@ -25,20 +24,29 @@
             "code": "HIP"
           }]
         },
+        "payor": {
+          "display": "Blue Cross Premera",
+          "identifier": {
+            "value": "https://www.premera.com"
+          }
+        },
         "beneficiary": {
           "reference": "resource:0"
         },
+        "subscriber": {
+          "display": "Joshua C Mandel"
+        },
         "class": [
           {
-            "type": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/coverage-class", "code": "group"}]},
+            "type": {"coding": [{"code": "group", "system": "http://terminology.hl7.org/CodeSystem/coverage-class" }]},
             "value": "1000010"
           },
           {
-            "type": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/coverage-class", "code": "rxgroup"}]},
+            "type": {"coding": [{"code": "rxgroup", "system": "http://terminology.hl7.org/CodeSystem/coverage-class"}]},
             "value": "BCWAPDP"
           },
           {
-            "type": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/coverage-class", "code": "rxbin"}]},
+            "type": {"coding": [{"code": "rxbin", "system": "http://terminology.hl7.org/CodeSystem/coverage-class"}]},
             "value": "610014"
           },
           {

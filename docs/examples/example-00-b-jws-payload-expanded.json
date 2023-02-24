@@ -1,6 +1,6 @@
 {
   "iss": "https://spec.smarthealth.cards/examples/issuer",
-  "nbf": 1677126821.046,
+  "nbf": 1677201304.68,
   "vc": {
     "type": [
       "https://smarthealth.cards#health-card"
@@ -16,11 +16,7 @@
               "resourceType": "Patient",
               "name": [
                 {
-                  "given": [
-                    "Joshua",
-                    "C"
-                  ],
-                  "family": "Mandel"
+                  "text": "Joshua C Mandel"
                 }
               ],
               "birthDate": "1982-10-26",
@@ -43,16 +39,25 @@
                   }
                 ]
               },
+              "payor": {
+                "display": "Blue Cross Premera",
+                "identifier": {
+                  "value": "https://www.premera.com"
+                }
+              },
               "beneficiary": {
                 "reference": "resource:0"
+              },
+              "subscriber": {
+                "display": "Joshua C Mandel"
               },
               "class": [
                 {
                   "type": {
                     "coding": [
                       {
-                        "system": "http://terminology.hl7.org/CodeSystem/coverage-class",
-                        "code": "group"
+                        "code": "group",
+                        "system": "http://terminology.hl7.org/CodeSystem/coverage-class"
                       }
                     ]
                   },
@@ -62,8 +67,8 @@
                   "type": {
                     "coding": [
                       {
-                        "system": "http://terminology.hl7.org/CodeSystem/coverage-class",
-                        "code": "rxgroup"
+                        "code": "rxgroup",
+                        "system": "http://terminology.hl7.org/CodeSystem/coverage-class"
                       }
                     ]
                   },
@@ -73,8 +78,8 @@
                   "type": {
                     "coding": [
                       {
-                        "system": "http://terminology.hl7.org/CodeSystem/coverage-class",
-                        "code": "rxbin"
+                        "code": "rxbin",
+                        "system": "http://terminology.hl7.org/CodeSystem/coverage-class"
                       }
                     ]
                   },
